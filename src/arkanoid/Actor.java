@@ -29,6 +29,8 @@ public abstract class Actor {
 	 * @param g
 	 */
 	public abstract void paint(Graphics g);
+	
+	public abstract void act();
 
 	public int getX() {
 		return x;

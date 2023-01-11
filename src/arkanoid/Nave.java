@@ -5,8 +5,8 @@ import java.awt.Graphics;
 
 public class Nave extends Actor {
 	
-	public static int WIDTH = 80;
-	public static int HEIGHT = 10;
+	private static int WIDTH = 80;
+	private static int HEIGHT = 10;
 	
 	/**
 	 * 
@@ -30,6 +30,10 @@ public class Nave extends Actor {
 	public void paint(Graphics g) {
 		g.setColor(Color.GRAY);
 		g.fillRect(x, y, WIDTH, HEIGHT);
+	}
+	
+	public void act() {
+		
 	}
 
 	@Override

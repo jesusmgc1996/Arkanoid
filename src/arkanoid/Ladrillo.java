@@ -8,7 +8,7 @@ public class Ladrillo extends Actor {
 	public static int WIDTH = 40;
 	public static int HEIGHT = 20;
 	public static int SPACE_BETWEEN = 3;
-	public static Color COLORS[] = new Color[] {Color.RED, Color.YELLOW, Color.PINK, Color.CYAN, Color.GREEN, Color.ORANGE};
+	private static Color COLORS[] = new Color[] {Color.RED, Color.YELLOW, Color.PINK, Color.CYAN, Color.GREEN, Color.ORANGE};
 	
 	private int color;
 	
@@ -35,6 +35,10 @@ public class Ladrillo extends Actor {
 	public void paint(Graphics g) {
 		g.setColor(COLORS[color]);
 		g.fillRect(x, y, WIDTH, HEIGHT);
+	}
+	
+	public void act() {
+		
 	}
 
 	public int getColor() {
