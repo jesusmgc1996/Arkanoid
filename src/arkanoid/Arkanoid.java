@@ -1,30 +1,79 @@
 package arkanoid;
 
 import java.awt.BorderLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Arkanoid {
 	
 	private static int FPS = 60;
-
-	public static void main(String[] args) {
-		
+	private JFrame window = null;
+	private List<Actor> actors = new ArrayList<Actor>();
+	private MiCanvas canvas = null;
+	Nave n = null;
+	
+	// Propiedad estática para usar un patrón singleton
+	private static Arkanoid instance = null;
+	
+	/**
+	 *  Método para usar el patrón singleton
+	 * @return
+	 */
+	public static Arkanoid getInstance() {
+		if (instance == null) instance = new Arkanoid();
+		return instance;
+	}
+	
+	/**
+	 * Método constructor
+	 */
+	public Arkanoid() {
 		// Creación del objeto ventana
-		JFrame window = new JFrame("Arkanoid");
+		window = new JFrame("Arkanoid");
 		window.setBounds(0, 0, 548, 700);
 		
 		// Asignación de layout a la ventana
 		window.getContentPane().setLayout(new BorderLayout());
 		
 		//Creación de la lista de actores
-		List<Actor> actors = createActors();
+		actors = createActors();
 		
 		// Creación del objeto Canvas para pintar los actores
-		MiCanvas canvas = new MiCanvas(actors);
+		canvas = new MiCanvas(actors);
+		
+		// Se envían los eventos del ratón a la nave
+		canvas.addMouseMotionListener(new MouseAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				super.mouseMoved(e);
+				n.move(e.getX());
+			}			
+		});
+		
+		// Se envían los eventos de teclado a la nave
+		canvas.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				super.keyPressed(e);
+				n.keyPressed(e);
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				super.keyReleased(e);
+				n.keyReleased(e);
+			}
+		});
+		
 		window.getContentPane().add(canvas, BorderLayout.CENTER);
 		
 		// Se ignora el repintado de la ventana por parte de Windows
@@ -33,7 +82,26 @@ public class Arkanoid {
 		// Visibilidad de la ventana
 		window.setVisible(true);
 		
-		// Bucle para redibujar la escena tantas veces por segundo como indique la variable FPS
+		// Control del evento de cierre de ventana
+		window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		window.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				closeAplication();
+			}
+		});
+	}
+
+	public static void main(String[] args) {
+		// Ejecución del juego
+		Arkanoid.getInstance().getCanvas().requestFocus();
+		Arkanoid.getInstance().game();
+	}
+	
+	/**
+	 * Método con el bucle del juego principal
+	 */
+	public void game() {
 		int msForFrame = 1000 / FPS;
 		do {
 			// Se toman los ms actuales
@@ -60,10 +128,22 @@ public class Arkanoid {
 		} while (true);
 	}
 	
-	private static List<Actor> createActors () {
+	/**
+	 * Método para crear los actores
+	 * @return
+	 */
+	private List<Actor> createActors() {
 		List<Actor> actors = new ArrayList<Actor>();
 		Ladrillo l = null;
 		int y = 75;
+		
+		// Creación de la nave
+		n = new Nave(224, 600);
+		actors.add(n);
+		
+		// Creación de la pelota
+		Pelota p = new Pelota(259, 585);
+		actors.add(p);
 		
 		// Creación de los ladrillos
 		for (int i = 0; i < 6; i++) {
@@ -76,15 +156,24 @@ public class Arkanoid {
 			y+= l.HEIGHT + l.SPACE_BETWEEN;
 		}
 		
-		// Creación de la nave
-		Nave n = new Nave(234, 600);
-		actors.add(n);
-		
-		// Creación de la pelota
-		Pelota p = new Pelota(259, 350);
-		actors.add(p);
-		
 		return actors;
+	}
+	
+	/**
+	 * Método para confirmar al cerrar la aplicación
+	 */
+	private void closeAplication() {
+		String[] options = {"Aceptar","Cancelar"};
+		int opt = JOptionPane.showOptionDialog(window, "¿Desea cerrar la aplicación?", "Salir de la aplicación",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, "Aceptar");
+		if (opt == JOptionPane.YES_OPTION) System.exit(0);
+	}
+	
+	/**
+	 * @return the canvas
+	 */
+	public MiCanvas getCanvas() {
+		return canvas;
 	}
 
 }

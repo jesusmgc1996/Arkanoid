@@ -37,21 +37,9 @@ public class Ladrillo extends Actor {
 		g.fillRect(x, y, WIDTH, HEIGHT);
 	}
 	
+	@Override
 	public void act() {
 		
-	}
-
-	public int getColor() {
-		return color;
-	}
-
-	public void setColor(int color) {
-		this.color = color;
-	}
-
-	@Override
-	public String toString() {
-		return "Ladrillo [color=" + color + ", x=" + x + ", y=" + y + "]";
 	}
 
 }
