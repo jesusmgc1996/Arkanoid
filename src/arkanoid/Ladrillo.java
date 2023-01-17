@@ -37,9 +37,14 @@ public class Ladrillo extends Actor {
 		g.fillRect(x, y, WIDTH, HEIGHT);
 	}
 	
+	/**
+	 * Método para eliminar ladrillos al colisionar
+	 */
 	@Override
-	public void act() {
-		
+	public void collision(Actor a) {
+		super.collision(a);
+		// Si se colisiona con la pelota, se elimina
+		if (a instanceof Pelota) Arkanoid.getInstance().deleteActor(this);
 	}
 
 }

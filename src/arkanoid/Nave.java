@@ -6,8 +6,8 @@ import java.awt.event.KeyEvent;
 
 public class Nave extends Actor {
 	
-	private static int WIDTH = 80;
-	private static int HEIGHT = 10;
+	public static int WIDTH = 80;
+	public static int HEIGHT = 10;
 	private static int SPEED = 5;
 	
 	private boolean left = false, right = false;
@@ -36,6 +36,9 @@ public class Nave extends Actor {
 		g.fillRect(x, y, WIDTH, HEIGHT);
 	}
 	
+	/**
+	 * Método para mover la nave
+	 */
 	@Override
 	public void act() {
 		// Se comprueba el movimiento

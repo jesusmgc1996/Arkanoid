@@ -1,6 +1,7 @@
 package arkanoid;
 
 import java.awt.BorderLayout;
+import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -15,15 +16,16 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class Arkanoid {
-	
-	private static int FPS = 60;
-	private JFrame window = null;
-	private List<Actor> actors = new ArrayList<Actor>();
-	private MiCanvas canvas = null;
-	Nave n = null;
-	
-	// Propiedad estática para usar un patrón singleton
+
 	private static Arkanoid instance = null;
+	private static int FPS = 60;
+	
+	private List<Actor> actors = new ArrayList<Actor>();
+	private List<Actor> deletedActors = new ArrayList<Actor>();
+	private JFrame window = null;
+	private MiCanvas canvas = null;
+	private Nave n = null;
+	private Pelota p = null;
 	
 	/**
 	 *  Método para usar el patrón singleton
@@ -108,11 +110,17 @@ public class Arkanoid {
 			long msBeforeScene = new Date().getTime();
 			
 			// Se redibuja la escena
-			canvas.repaint();
+			canvas.paintScene();
 			
-			// Recorro todos los actores, consiguiendo que cada uno de ellos actúe
+			// Se recorren todos los actores para que actúen
 			for (Actor a: actors)
 				a.act();
+			
+			// Se detectan colisiones
+			detectCollisions();
+						
+			// Se actualizan los actores
+			updateActors();
 			
 			// Se calculan los ms que debemos parar el proceso, generando 60 FPS
 			long msAfterScene = new Date().getTime();
@@ -134,7 +142,6 @@ public class Arkanoid {
 	 */
 	private List<Actor> createActors() {
 		List<Actor> actors = new ArrayList<Actor>();
-		Ladrillo l = null;
 		int y = 75;
 		
 		// Creación de la nave
@@ -142,21 +149,55 @@ public class Arkanoid {
 		actors.add(n);
 		
 		// Creación de la pelota
-		Pelota p = new Pelota(259, 585);
+		p = new Pelota(259, 585);
 		actors.add(p);
 		
 		// Creación de los ladrillos
 		for (int i = 0; i < 6; i++) {
 			int x = 10;
 			for (int j = 0; j < 12; j++) {
-				l = new Ladrillo(x, y, i);
+				Ladrillo l = new Ladrillo(x, y, i);
 				actors.add(l);
-				x += l.WIDTH + l.SPACE_BETWEEN;
+				x += Ladrillo.WIDTH + Ladrillo.SPACE_BETWEEN;
 			}
-			y+= l.HEIGHT + l.SPACE_BETWEEN;
+			y += Ladrillo.HEIGHT + Ladrillo.SPACE_BETWEEN;
 		}
-		
 		return actors;
+	}
+	
+	public void deleteActor(Actor a) {
+		deletedActors.add(a);
+	}
+	
+	private void updateActors() {
+		actors.removeAll(deletedActors); // Se eliminan los actores que se deben eliminar¡
+		deletedActors.clear(); // Se limpia la lista de actores a eliminar
+	}
+	
+
+	/**
+	 * Se detectan las colisiones entre los actores
+	 */
+	private void detectCollisions() {
+		// La detección de colisiones se va a basar en formar un rectángulo con las medidas que ocupa cada actor en pantalla,
+		// de esa manera, las colisiones se traducirán en intersecciones entre rectángulos
+		Actor a1 = p;
+		// Se forma el rectángulo para la pelota
+		Rectangle p = new Rectangle(a1.getX(), a1.getY(), Pelota.RADIUS, Pelota.RADIUS);
+		// Se comprueba un actor con cualquier otro actor
+		for (Actor a2: actors)
+			// Se evita comparar un actor con él mismo
+			if (!a1.equals(a2)) {
+				// Se forman los rectángulos para los ladrillos y la nave
+				Rectangle l = new Rectangle(a2.getX(), a2.getY(), Ladrillo.WIDTH, Ladrillo.HEIGHT);
+				Rectangle n = new Rectangle(a2.getX(), a2.getY(), Nave.WIDTH, Nave.HEIGHT);
+				// Si los dos rectángulos tienen alguna intersección, se notifica una colisión
+				if (p.intersects(l) || p.intersects(n)) {
+					a1.collision(a2); // El actor 1 colisiona con el actor 2
+					a2.collision(a1); // El actor 2 colisiona con el actor 1
+					break; // Se evita que haya más de una colisión a la vez
+				}
+			}
 	}
 	
 	/**

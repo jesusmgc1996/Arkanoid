@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 public class Pelota extends Actor {
 	
-	private static int RADIUS = 15;
+	public static int RADIUS = 15;
 	
 	private int xSpeed = -5, ySpeed = -5;
 
@@ -33,6 +33,10 @@ public class Pelota extends Actor {
 		g.fillOval(x, y, RADIUS, RADIUS);
 	}
 	
+	/**
+	 * Método para mover la pelota
+	 */
+	@Override
 	public void act() {
 		// Movimiento horizontal en cada FPS
 		x += xSpeed;
@@ -43,6 +47,18 @@ public class Pelota extends Actor {
 		y += ySpeed;
 		// Si la pelota sale por arriba o abajo, rebota
 		if (y <= 0 || y + RADIUS >= Arkanoid.getInstance().getCanvas().getHeight()) ySpeed = -ySpeed;
+	}
+	
+	/**
+	 * Método para cambiar la dirección de la pelota al colisionar
+	 */
+	@Override
+	public void collision(Actor a) {
+		super.collision(a);
+		// Si se colisiona con el ladrillo o la nave, cambia la dirección
+		if (a instanceof Ladrillo || a instanceof Nave) {
+			ySpeed = -ySpeed;
+		}
 	}
 
 }

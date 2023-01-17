@@ -30,7 +30,18 @@ public abstract class Actor {
 	 */
 	public abstract void paint(Graphics g);
 	
-	public abstract void act();
+	/**
+	 * Método para que los actores actúen.
+	 */
+	public void act() {
+	}
+	
+	/**
+	 * Método para realizar acciones al colisionar
+	 * @param a
+	 */
+	public void collision(Actor a) {
+	}
 
 	public int getX() {
 		return x;
