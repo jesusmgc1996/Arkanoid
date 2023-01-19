@@ -142,6 +142,7 @@ public class Arkanoid {
 	 */
 	private List<Actor> createActors() {
 		List<Actor> actors = new ArrayList<Actor>();
+		Ladrillo l = null;
 		int y = 75;
 		
 		// Creación de la nave
@@ -156,11 +157,11 @@ public class Arkanoid {
 		for (int i = 0; i < 6; i++) {
 			int x = 10;
 			for (int j = 0; j < 12; j++) {
-				Ladrillo l = new Ladrillo(x, y, i);
+				l = new Ladrillo(x, y, i);
 				actors.add(l);
-				x += Ladrillo.WIDTH + Ladrillo.SPACE_BETWEEN;
+				x += l.getWidth() + Ladrillo.SPACE_BETWEEN;
 			}
-			y += Ladrillo.HEIGHT + Ladrillo.SPACE_BETWEEN;
+			y += l.getHeight() + Ladrillo.SPACE_BETWEEN;
 		}
 		return actors;
 	}
@@ -183,16 +184,15 @@ public class Arkanoid {
 		// de esa manera, las colisiones se traducirán en intersecciones entre rectángulos
 		Actor a1 = p;
 		// Se forma el rectángulo para la pelota
-		Rectangle p = new Rectangle(a1.getX(), a1.getY(), Pelota.RADIUS, Pelota.RADIUS);
+		Rectangle r1 = new Rectangle(a1.getX(), a1.getY(), a1.getWidth(), a1.getHeight());
 		// Se comprueba un actor con cualquier otro actor
 		for (Actor a2: actors)
 			// Se evita comparar un actor con él mismo
 			if (!a1.equals(a2)) {
 				// Se forman los rectángulos para los ladrillos y la nave
-				Rectangle l = new Rectangle(a2.getX(), a2.getY(), Ladrillo.WIDTH, Ladrillo.HEIGHT);
-				Rectangle n = new Rectangle(a2.getX(), a2.getY(), Nave.WIDTH, Nave.HEIGHT);
+				Rectangle r2 = new Rectangle(a2.getX(), a2.getY(), a2.getWidth(), a2.getHeight());
 				// Si los dos rectángulos tienen alguna intersección, se notifica una colisión
-				if (p.intersects(l) || p.intersects(n)) {
+				if (r1.intersects(r2)) {
 					a1.collision(a2); // El actor 1 colisiona con el actor 2
 					a2.collision(a1); // El actor 2 colisiona con el actor 1
 					break; // Se evita que haya más de una colisión a la vez

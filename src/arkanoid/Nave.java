@@ -1,13 +1,9 @@
 package arkanoid;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
 public class Nave extends Actor {
 	
-	public static int WIDTH = 80;
-	public static int HEIGHT = 10;
 	private static int SPEED = 5;
 	
 	private boolean left = false, right = false;
@@ -24,18 +20,9 @@ public class Nave extends Actor {
 	 * @param y
 	 */
 	public Nave(int x, int y) {
-		super(x, y);
+		super(x, y, ImagesCache.getInstance().getImage(ImagesCache.SHIP_IMAGE));
 	}
 
-	/**
-	 * Método para pintar la nave
-	 */
-	@Override
-	public void paint(Graphics g) {
-		g.setColor(Color.GRAY);
-		g.fillRect(x, y, WIDTH, HEIGHT);
-	}
-	
 	/**
 	 * Método para mover la nave
 	 */
@@ -59,7 +46,7 @@ public class Nave extends Actor {
 		this.x = x;
 
 		// Se obtienen los casos en los que la nave sale del Canvas
-		if (this.x > canvas.getWidth() - WIDTH) this.x = canvas.getWidth() - WIDTH; // Derecha
+		if (this.x > canvas.getWidth() - width) this.x = canvas.getWidth() - width; // Derecha
 		if (this.x < 0) this.x = 0; // Izquierda
 	}
 	
@@ -87,6 +74,11 @@ public class Nave extends Actor {
 		case KeyEvent.VK_RIGHT:
 			right = false; break;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Nave [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + ", img=" + img + "]";
 	}
 
 }

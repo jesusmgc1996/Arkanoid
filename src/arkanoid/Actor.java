@@ -1,11 +1,13 @@
 package arkanoid;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 public abstract class Actor {
 	
-	protected int x;
-	protected int y;
+	protected int x, y;
+	protected int width, height;
+	protected BufferedImage img;
 
 	/**
 	 * 
@@ -18,20 +20,23 @@ public abstract class Actor {
 	 * @param x
 	 * @param y
 	 */
-	public Actor(int x, int y) {
+	public Actor(int x, int y, BufferedImage img) {
 		super();
 		this.x = x;
 		this.y = y;
+		this.setImg(img);
 	}
 
 	/**
-	 * Método para pintar cada actor. Obliga a las subclases a implementarlo.
+	 * Método para pintar cada actor
 	 * @param g
 	 */
-	public abstract void paint(Graphics g);
+	public void paint(Graphics g) {
+		g.drawImage(img, x, y, null);
+	};
 	
 	/**
-	 * Método para que los actores actúen.
+	 * Método para que los actores actúen
 	 */
 	public void act() {
 	}
@@ -59,9 +64,35 @@ public abstract class Actor {
 		this.y = y;
 	}
 
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public BufferedImage getImg() {
+		return img;
+	}
+
+	public void setImg(BufferedImage img) {
+		this.img = img;
+		this.width = this.img.getWidth();
+		this.height = this.img.getHeight();
+	}
+
 	@Override
 	public String toString() {
-		return "Actor [x=" + x + ", y=" + y + "]";
+		return "Actor [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + ", img=" + img + "]";
 	}
 	
 }

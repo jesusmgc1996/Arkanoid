@@ -1,16 +1,10 @@
 package arkanoid;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
 public class Ladrillo extends Actor {
 	
-	public static int WIDTH = 40;
-	public static int HEIGHT = 20;
 	public static int SPACE_BETWEEN = 3;
-	private static Color COLORS[] = new Color[] {Color.RED, Color.YELLOW, Color.PINK, Color.CYAN, Color.GREEN, Color.ORANGE};
-	
-	private int color;
+	private static String IMAGES[] = new String[] {ImagesCache.RED_BRICK, ImagesCache.YELLOW_BRICK, ImagesCache.PURPLE_BRICK,
+			ImagesCache.CYAN_BRICK, ImagesCache.GREEN_BRICK, ImagesCache.ORANGE_BRICK};
 	
 	/**
 	 * 
@@ -18,25 +12,16 @@ public class Ladrillo extends Actor {
 	public Ladrillo() {
 		super();
 	}
-
+	
 	/**
 	 * @param x
 	 * @param y
+	 * @param image
 	 */
-	public Ladrillo(int x, int y, int color) {
-		super(x, y);
-		this.color = color;
+	public Ladrillo(int x, int y, int image) {
+		super(x, y, ImagesCache.getInstance().getImage(IMAGES[image]));
 	}
 
-	/**
-	 * Método para pintar los ladrillos
-	 */
-	@Override
-	public void paint(Graphics g) {
-		g.setColor(COLORS[color]);
-		g.fillRect(x, y, WIDTH, HEIGHT);
-	}
-	
 	/**
 	 * Método para eliminar ladrillos al colisionar
 	 */
@@ -45,6 +30,11 @@ public class Ladrillo extends Actor {
 		super.collision(a);
 		// Si se colisiona con la pelota, se elimina
 		if (a instanceof Pelota) Arkanoid.getInstance().deleteActor(this);
+	}
+
+	@Override
+	public String toString() {
+		return "Ladrillo [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + ", img=" + img + "]";
 	}
 
 }
