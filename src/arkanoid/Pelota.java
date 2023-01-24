@@ -16,7 +16,8 @@ public class Pelota extends Actor {
 	 * @param y
 	 */
 	public Pelota(int x, int y) {
-		super(x, y, ImagesCache.getInstance().getImage(ImagesCache.BALL_IMAGE));
+		super(x, y);
+		setActualSprite(ImagesCache.getInstance().getImage(ImagesCache.BALL_IMAGE));
 	}
 	
 	/**
@@ -47,7 +48,8 @@ public class Pelota extends Actor {
 
 	@Override
 	public String toString() {
-		return "Pelota [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + ", img=" + img + "]";
+		return "Pelota [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + ", actualSprite="
+				+ actualSprite + "]";
 	}
 
 }

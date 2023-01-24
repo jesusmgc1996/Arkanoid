@@ -16,19 +16,28 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class Arkanoid {
-
-	private static Arkanoid instance = null;
+	
 	private static int FPS = 60;
+
+	// Instancia Singleton
+	private static Arkanoid instance = null;
 	
 	private List<Actor> actors = new ArrayList<Actor>();
 	private List<Actor> deletedActors = new ArrayList<Actor>();
+	private List<Actor> newActors = new ArrayList<Actor>();
 	private JFrame window = null;
 	private MiCanvas canvas = null;
 	private Nave n = null;
 	private Pelota p = null;
+
+	public static void main(String[] args) {
+		// Ejecución del juego
+		Arkanoid.getInstance().getCanvas().requestFocus();
+		Arkanoid.getInstance().game();
+	}
 	
 	/**
-	 *  Método para usar el patrón singleton
+	 * Getter Singleton
 	 * @return
 	 */
 	public static Arkanoid getInstance() {
@@ -92,12 +101,6 @@ public class Arkanoid {
 				closeAplication();
 			}
 		});
-	}
-
-	public static void main(String[] args) {
-		// Ejecución del juego
-		Arkanoid.getInstance().getCanvas().requestFocus();
-		Arkanoid.getInstance().game();
 	}
 	
 	/**
@@ -166,11 +169,28 @@ public class Arkanoid {
 		return actors;
 	}
 	
+	/**
+	 * Método para incorporar nuevos actores
+	 * @param a
+	 */
+	public void addNewActor (Actor a) {
+		newActors.add(a);
+	}
+	
+	/**
+	 * Método para eliminar actores
+	 * @param a
+	 */
 	public void deleteActor(Actor a) {
 		deletedActors.add(a);
 	}
 	
+	/**
+	 * Método para actualizar actores
+	 */
 	private void updateActors() {
+		actors.addAll(newActors); // Se añaden los nuevos actores
+		newActors.clear(); // Se limpia la lista de actores añadidos
 		actors.removeAll(deletedActors); // Se eliminan los actores que se deben eliminar¡
 		deletedActors.clear(); // Se limpia la lista de actores a eliminar
 	}

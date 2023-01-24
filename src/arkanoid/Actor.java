@@ -2,12 +2,17 @@ package arkanoid;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class Actor {
+public class Actor {
 	
 	protected int x, y;
 	protected int width, height;
-	protected BufferedImage img;
+	protected BufferedImage actualSprite;
+	protected List<BufferedImage> animationSprites = new ArrayList<BufferedImage>();
+	protected int spriteSpeed = 0;
+	private int time = 0;
 
 	/**
 	 * 
@@ -20,11 +25,10 @@ public abstract class Actor {
 	 * @param x
 	 * @param y
 	 */
-	public Actor(int x, int y, BufferedImage img) {
+	public Actor(int x, int y) {
 		super();
 		this.x = x;
 		this.y = y;
-		this.setImg(img);
 	}
 
 	/**
@@ -32,13 +36,22 @@ public abstract class Actor {
 	 * @param g
 	 */
 	public void paint(Graphics g) {
-		g.drawImage(img, x, y, null);
+		g.drawImage(actualSprite, x, y, null);
 	};
 	
 	/**
 	 * Método para que los actores actúen
 	 */
 	public void act() {
+		if (animationSprites != null && animationSprites.size() > 0) {
+			time++;
+			if (time % spriteSpeed == 0) {
+				time = 0;
+				int actualSpriteIndex = animationSprites.indexOf(actualSprite);
+				int nextSpriteIndex = (actualSpriteIndex + 1) % animationSprites.size();
+				actualSprite = animationSprites.get(nextSpriteIndex);
+			}
+		}
 	}
 	
 	/**
@@ -80,19 +93,28 @@ public abstract class Actor {
 		this.height = height;
 	}
 
-	public BufferedImage getImg() {
-		return img;
+	public BufferedImage getActualSprite() {
+		return actualSprite;
 	}
 
-	public void setImg(BufferedImage img) {
-		this.img = img;
-		this.width = this.img.getWidth();
-		this.height = this.img.getHeight();
+	public void setActualSprite(BufferedImage actualSprite) {
+		this.actualSprite = actualSprite;
+		width = actualSprite.getWidth();
+		height = actualSprite.getHeight();
+	}
+
+	public List<BufferedImage> getAnimationSprites() {
+		return animationSprites;
+	}
+
+	public void setAnimationSprites(List<BufferedImage> animationSprites) {
+		this.animationSprites = animationSprites;
 	}
 
 	@Override
 	public String toString() {
-		return "Actor [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + ", img=" + img + "]";
+		return "Actor [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + ", actualSprite="
+				+ actualSprite + ", animationSprites=" + animationSprites + "]";
 	}
 	
 }

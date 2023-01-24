@@ -20,7 +20,8 @@ public class Nave extends Actor {
 	 * @param y
 	 */
 	public Nave(int x, int y) {
-		super(x, y, ImagesCache.getInstance().getImage(ImagesCache.SHIP_IMAGE));
+		super(x, y);
+		setActualSprite(ImagesCache.getInstance().getImage(ImagesCache.SHIP_IMAGE));
 	}
 
 	/**
@@ -78,7 +79,8 @@ public class Nave extends Actor {
 
 	@Override
 	public String toString() {
-		return "Nave [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + ", img=" + img + "]";
+		return "Nave [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + ", actualSprite="
+				+ actualSprite + "]";
 	}
 
 }
